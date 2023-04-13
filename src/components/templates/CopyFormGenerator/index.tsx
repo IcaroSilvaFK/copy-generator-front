@@ -1,15 +1,21 @@
 import { useTheme } from 'styled-components'
 import { Col, Container } from './styles'
 import Select, { StylesConfig } from 'react-select'
-import { transparentize } from 'polished'
+import { useForm } from 'react-hook-form'
 
 const options = [
   { value: 'Facebook Ads, TikTok Ads, e Twitter Ads', label: 't' },
   { value: 'Google Ads', label: 'g' },
 ]
 
+interface IFormProps {
+  title: string
+  copy: string
+}
+
 export function CopyFormGenerator() {
   const { colors } = useTheme()
+  const { register, handleSubmit } = useForm<IFormProps>()
 
   const selectStyles: StylesConfig = {
     control(base, { menuIsOpen }) {
@@ -22,11 +28,7 @@ export function CopyFormGenerator() {
         },
       }
     },
-    menu(base) {
-      return {
-        ...base,
-      }
-    },
+
     option(base, { isFocused }) {
       return {
         ...base,
@@ -59,12 +61,16 @@ export function CopyFormGenerator() {
     },
   }
 
+  function onSubmit(data: IFormProps) {
+    console.log({ data })
+  }
+
   return (
     <Container>
       <header>
         <h3>Que tal produzirmos uma copy persuasiva?</h3>
       </header>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Col>
           <label>Para qual plataforma irá usar a copy?</label>
           <Select options={options} styles={selectStyles} placeholder="Selecione uma opção" />
@@ -72,12 +78,12 @@ export function CopyFormGenerator() {
 
         <Col>
           <label>Para qual plataforma irá usar a copy?</label>
-          <input type="text" placeholder="Digite aqui..." />
+          <input type="text" placeholder="Digite aqui..." {...register('title')} />
         </Col>
 
         <Col>
           <label>Agora me de o máximo de detalhes possíveis sobre o sue produto e/ou serviço</label>
-          <textarea placeholder="Digite aqui..." />
+          <textarea placeholder="Digite aqui..." {...register('copy')} />
         </Col>
 
         <button>Gerar minha copy</button>
