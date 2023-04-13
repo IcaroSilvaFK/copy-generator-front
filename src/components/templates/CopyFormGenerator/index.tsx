@@ -4,8 +4,11 @@ import Select, { StylesConfig } from 'react-select'
 import { useForm } from 'react-hook-form'
 
 const options = [
-  { value: 'Facebook Ads, TikTok Ads, e Twitter Ads', label: 't' },
-  { value: 'Google Ads', label: 'g' },
+  {
+    value: 'Facebook Ads, TikTok Ads, e Twitter Ads',
+    label: 'Facebook Ads, TikTok Ads, e Twitter Ads',
+  },
+  { value: 'Google Ads', label: 'Google Ads' },
 ]
 
 interface IFormProps {
