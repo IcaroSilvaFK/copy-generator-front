@@ -86,7 +86,10 @@ export function CopyFormGenerator() {
 
         <Col>
           <label>Agora me de o máximo de detalhes possíveis sobre o sue produto e/ou serviço</label>
-          <textarea placeholder="Digite aqui..." {...register('copy')} />
+          <textarea
+            placeholder="Fale sobre o que você vende, os benefícios, seu diferencial do concorrente, como o produto/serviço pode resolver problemas ou atender às necessidades do público-alvo. Separe cada informação por linha!"
+            {...register('copy')}
+          />
         </Col>
 
         <button>Gerar minha copy</button>
