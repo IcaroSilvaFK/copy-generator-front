@@ -11,6 +11,8 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
 
+    font-family: ${({ theme }) => theme.fonts.inter};
+    color:${({ theme }) => theme.colors.black};
     font-size: 1rem;
   }
 
