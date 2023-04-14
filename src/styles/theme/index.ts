@@ -9,6 +9,12 @@ export const theme = {
     red: {
       500: '#ED302B',
     },
+    blue: {
+      500: '#003386',
+    },
+    yellow: {
+      500: '#FFEDB6',
+    },
   },
   fonts: {
     inter: "'Inter', sans-serif",

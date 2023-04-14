@@ -22,7 +22,7 @@ export const Container = styled.a<ContainerProps>`
 
   display: flex;
   align-items: center;
-  justify-content: center;
+
   gap: 16px;
 
   position: relative;
@@ -30,7 +30,7 @@ export const Container = styled.a<ContainerProps>`
   ${({ isActive, theme }) =>
     isActive &&
     css`
-      background: ${theme.colors.black};
+      background: ${theme.colors.blue[500]};
       color: ${theme.colors.white};
     `}
 
@@ -50,7 +50,7 @@ export const Container = styled.a<ContainerProps>`
           left: 0;
           right: 0;
           display: block;
-          background: ${theme.colors.black};
+          background: ${theme.colors.blue[500]};
           animation: ${hoverLinkAnimation} 0.3s linear;
         }
       }

@@ -13,8 +13,11 @@ export const Container = styled.div`
   header {
     display: flex;
     align-items: center;
-
     gap: 6px;
+
+    h1 {
+      color: ${({ theme }) => theme.colors.blue[500]};
+    }
   }
 
   ul {
@@ -27,6 +30,11 @@ export const Container = styled.div`
     align-items: center;
     gap: 6px;
     padding-bottom: 32px;
+
+    b {
+      color: ${({ theme }) => theme.colors.blue[500]};
+    }
+
     button {
       background: transparent;
       border: 1px solid ${({ theme }) => theme.colors.gray[100]};

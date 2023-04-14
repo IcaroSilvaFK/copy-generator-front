@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model RequestCopy {
+  id           String         @id @default(cuid())
+  copyTitle    String         @map("copy_title")
+  description  String
+  createdAt    DateTime       @default(now()) @map("create_at")
+  ResponseCopy ResponseCopy[]
+
+  @@map("requests_copys")
+}
+
+model ResponseCopy {
+  id              String      @id @default(cuid())
+  copyTitle       String      @map("copy_title")
+  generatedCopy   String      @map("generated_copy") @db.LongText
+  requestedCopyId String
+  requestedCopy   RequestCopy @relation(fields: [requestedCopyId], references: [id])
+
+  @@index([requestedCopyId])
+  @@map("responses_copys")
+}

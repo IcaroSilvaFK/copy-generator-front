@@ -1,3 +1,6 @@
+import { FaHistory } from 'react-icons/fa'
+import { TbFileText } from 'react-icons/tb'
+
 import { Link } from '../ActiveLink'
 import { Container } from './styles'
 
@@ -11,8 +14,14 @@ export function NavBar() {
       <ul>
         <li>
           <Link href="/copy">
-            <img src="/assets/copy-icon.svg" alt="copy" />
+            <TbFileText size={22} />
             <span>Criador de copy</span>
+          </Link>
+        </li>
+        <li>
+          <Link href="/history">
+            <FaHistory size={22} />
+            <span>Histórico de copy</span>
           </Link>
         </li>
         <li>
