@@ -36,12 +36,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { prompt, title, maxToken, platform } = schema.parse(req.body)
 
-    const requestCopy = await prismaClient.requestCopy.create({
-      data: {
-        copyTitle: title,
-        description: prompt,
-      },
-    })
+    // const requestCopy = await prismaClient.requestCopy.create({
+    //   data: {
+    //     copyTitle: title,
+    //     description: prompt,
+    //   },
+    // })
 
     const payload = {
       model: 'gpt-3.5-turbo',
@@ -83,13 +83,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     }))
 
-    await prismaClient.responseCopy.create({
-      data: {
-        copyTitle: objectFromResponse[0].copy.title,
-        generatedCopy: objectFromResponse[0].copy.description,
-        requestedCopyId: requestCopy.id,
-      },
-    })
+    // await prismaClient.responseCopy.create({
+    //   data: {
+    //     copyTitle: objectFromResponse[0].copy.title,
+    //     generatedCopy: objectFromResponse[0].copy.description,
+    //     requestedCopyId: requestCopy.id,
+    //   },
+    // })
 
     res.status(200).json({ data: objectFromResponse[0] })
   } catch (err) {
