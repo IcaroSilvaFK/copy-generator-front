@@ -88,7 +88,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         copyTitle: objectFromResponse[0].copy.title,
         generatedCopy: objectFromResponse[0].copy.description,
         requestedCopyId: requestCopy.id,
-        createdAt: objectFromResponse[0].copy.createdAt,
       },
     })
 
