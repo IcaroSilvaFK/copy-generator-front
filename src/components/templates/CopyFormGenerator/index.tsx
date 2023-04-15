@@ -1,14 +1,23 @@
 import { useTheme } from 'styled-components'
-import { ButtonCopy, Col, Container, Flex } from './styles'
 import Select, { StylesConfig } from 'react-select'
+import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
-import { BiMenu, BiMenuAltLeft } from 'react-icons/bi'
+import { useEffect, useState } from 'react'
 import { useAtom } from 'jotai'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import { BiMenu, BiMenuAltLeft } from 'react-icons/bi'
 import { requestedCopyAtom } from '../../../atoms/requestedCopyAtom'
 import { loadingRequestCopy } from '../../../atoms/loadingRequestCopy'
-import { toast } from 'react-toastify'
 
+import { ButtonCopy, Col, Container, Flex } from './styles'
+
+const schema = z.object({
+  title: z.string().min(5),
+  copy: z.string().min(5),
+})
+type FormPropertiesType = z.infer<typeof schema>
 const options = [
   {
     value: 'Facebook Ads, TikTok Ads, e Twitter Ads',
@@ -16,11 +25,6 @@ const options = [
   },
   { value: 'Google Ads', label: 'Google Ads' },
 ]
-
-interface IFormProps {
-  title: string
-  copy: string
-}
 
 type SelectedCopyType = 'long' | 'short' | null
 
@@ -36,11 +40,33 @@ interface IGeneratedCopyPayload {
 
 export function CopyFormGenerator() {
   const { colors } = useTheme()
-  const { register, handleSubmit } = useForm<IFormProps>()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormPropertiesType>({
+    defaultValues: {
+      copy: '',
+      title: '',
+    },
+    resolver: zodResolver(schema),
+  })
   const [selectedCopyType, setSelectedCopyType] = useState<SelectedCopyType>(null)
   const [copys, setCopys] = useAtom(requestedCopyAtom)
   const [isLoadingRequestCopy, setIsLoadingRequestCopy] = useAtom(loadingRequestCopy)
   const [platform, setPlatform] = useState('')
+
+  useEffect(() => {
+    if (errors.title || errors.copy) {
+      toast.error(
+        `O campo ${errors.title ? 'nome' : 'descrição'} precisa ser preenchido corretamente`,
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+    }
+  }, [errors.copy, errors.title])
 
   const selectStyles: StylesConfig = {
     control(base, { menuIsOpen }) {
@@ -86,7 +112,7 @@ export function CopyFormGenerator() {
     },
   }
 
-  async function onSubmit(data: IFormProps) {
+  async function onSubmit(data: FormPropertiesType) {
     try {
       if (!selectedCopyType) {
         toast('Selecione o tamanho da copy por favor.', {
@@ -117,6 +143,7 @@ export function CopyFormGenerator() {
         position: toast.POSITION.TOP_CENTER,
         draggable: true,
       })
+      reset()
     } catch (err) {
       toast.error('Erro ao gerar o copy por favor tente novamente', {
         position: toast.POSITION.TOP_CENTER,
