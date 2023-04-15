@@ -12,7 +12,8 @@ export const history = [
     created_at: '2023-04-12T14:30:00Z',
   },
   {
-    title: 'Fair use: quando é permitido usar material protegido por direitos autorais',
+    title:
+      'Fair use: quando é permitido usar material protegido por direitos autorais',
     description:
       'Este artigo examina a doutrina de fair use, que permite o uso limitado de material protegido por direitos autorais sem permissão do titular dos direitos. São discutidos os critérios que devem ser considerados ao determinar se o uso é justo.',
     created_at: '2023-04-11T16:45:00Z',

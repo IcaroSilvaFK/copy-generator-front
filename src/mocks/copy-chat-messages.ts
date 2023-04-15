@@ -10,7 +10,8 @@ export const copy = [
       'Este artigo explora o que é considerado plágio e como evitá-lo ao criar conteúdo original. Também são discutidas as consequências legais e éticas do plágio.',
   },
   {
-    titulo: 'Fair use: quando é permitido usar material protegido por direitos autorais',
+    titulo:
+      'Fair use: quando é permitido usar material protegido por direitos autorais',
     descricao:
       'Este artigo examina a doutrina de fair use, que permite o uso limitado de material protegido por direitos autorais sem permissão do titular dos direitos. São discutidos os critérios que devem ser considerados ao determinar se o uso é justo.',
   },
