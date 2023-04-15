@@ -6,6 +6,8 @@ import { useState } from 'react'
 import { BiMenu, BiMenuAltLeft } from 'react-icons/bi'
 import { useAtom } from 'jotai'
 import { requestedCopyAtom } from '../../../atoms/requestedCopyAtom'
+import { loadingRequestCopy } from '../../../atoms/loadingRequestCopy'
+import { toast } from 'react-toastify'
 
 const options = [
   {
@@ -23,10 +25,13 @@ interface IFormProps {
 type SelectedCopyType = 'long' | 'short' | null
 
 interface IGeneratedCopyPayload {
-  copy: {
-    description: string
-    title: string
-  }[]
+  data: {
+    copy: {
+      description: string
+      title: string
+      createdAt: string
+    }
+  }
 }
 
 export function CopyFormGenerator() {
@@ -34,6 +39,8 @@ export function CopyFormGenerator() {
   const { register, handleSubmit } = useForm<IFormProps>()
   const [selectedCopyType, setSelectedCopyType] = useState<SelectedCopyType>(null)
   const [copys, setCopys] = useAtom(requestedCopyAtom)
+  const [isLoadingRequestCopy, setIsLoadingRequestCopy] = useAtom(loadingRequestCopy)
+  const [platform, setPlatform] = useState('')
 
   const selectStyles: StylesConfig = {
     control(base, { menuIsOpen }) {
@@ -80,22 +87,44 @@ export function CopyFormGenerator() {
   }
 
   async function onSubmit(data: IFormProps) {
-    const payload = {
-      prompt: data.copy,
-      title: data.title,
-    }
+    try {
+      if (!selectedCopyType) {
+        toast('Selecione o tamanho da copy por favor.', {
+          position: toast.POSITION.TOP_CENTER,
+          draggable: true,
+        })
+        return
+      }
+      setIsLoadingRequestCopy(true)
+      const payload = {
+        prompt: data.copy,
+        title: data.title,
+        maxToken: selectedCopyType === 'long' ? 500 : 200,
+        platform,
+      }
 
-    const response: IGeneratedCopyPayload = await (
-      await fetch('/api/generate/copy', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify(payload),
+      const response: IGeneratedCopyPayload = await (
+        await fetch('/api/generate/copy', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          body: JSON.stringify(payload),
+        })
+      ).json()
+      setCopys([...copys, response.data.copy])
+      toast.success('Copy gerada com sucesso', {
+        position: toast.POSITION.TOP_CENTER,
+        draggable: true,
       })
-    ).json()
-    console.log(response.copy)
-    // setCopys([...copys, ...response.copy])
+    } catch (err) {
+      toast.error('Erro ao gerar o copy por favor tente novamente', {
+        position: toast.POSITION.TOP_CENTER,
+        draggable: true,
+      })
+    } finally {
+      setIsLoadingRequestCopy(false)
+    }
   }
 
   return (
@@ -106,11 +135,19 @@ export function CopyFormGenerator() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Col>
           <label>Para qual plataforma irá usar a copy?</label>
-          <Select options={options} styles={selectStyles} placeholder="Selecione uma opção" />
+          <Select
+            options={options}
+            styles={selectStyles}
+            placeholder="Selecione uma opção"
+            onChange={(e) => {
+              const { value } = e as { value: string }
+              setPlatform(value)
+            }}
+          />
         </Col>
 
         <Col>
-          <label>Para qual plataforma irá usar a copy?</label>
+          <label>Nos diga o nome do seu serviço ou produto</label>
           <input type="text" placeholder="Digite aqui..." {...register('title')} />
         </Col>
 
@@ -137,7 +174,7 @@ export function CopyFormGenerator() {
             <span>Copy curta</span>
           </ButtonCopy>
         </Flex>
-        <button>Gerar minha copy</button>
+        <button disabled={isLoadingRequestCopy}>Gerar minha copy</button>
       </form>
     </Container>
   )

@@ -35,7 +35,12 @@ export const Container = styled.div`
       transition: all linear 0.3s;
 
       &:hover {
-        background: ${({ theme }) => transparentize(0.1, theme.colors.black)};
+        background: ${({ theme }) => transparentize(0.1, theme.colors.blue[500])};
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
       }
     }
   }

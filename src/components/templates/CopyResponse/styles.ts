@@ -59,3 +59,23 @@ export const EmptyCopyContainer = styled.div`
     justify-content: center;
   }
 `
+
+export const LoadingCopy = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 12px;
+  margin-bottom: 12px;
+
+  img {
+    width: 46px;
+    height: 46px;
+    object-fit: cover;
+  }
+
+  span {
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.blue[500]};
+  }
+`

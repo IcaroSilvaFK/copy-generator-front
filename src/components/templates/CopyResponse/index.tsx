@@ -1,18 +1,27 @@
 import { IoIosCopy } from 'react-icons/io'
+import { useAtom } from 'jotai'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
-import { copy } from '../../../mocks/copy-chat-messages'
 import { CopyChatMessageWave } from '../../CopyChatMessageWave'
 
-import { Container, EmptyCopyContainer } from './styles'
+import { Container, EmptyCopyContainer, LoadingCopy } from './styles'
 import { requestedCopyAtom } from '../../../atoms/requestedCopyAtom'
-import { useAtom } from 'jotai'
+import { loadingRequestCopy } from '../../../atoms/loadingRequestCopy'
 
 export function CopyResponse() {
   const [copys] = useAtom(requestedCopyAtom)
+  const [isLoadingRequestCopy] = useAtom(loadingRequestCopy)
+  const [parentRef] = useAutoAnimate<HTMLDivElement>()
 
   return (
-    <Container>
-      {!copys.length && (
+    <Container ref={parentRef}>
+      {isLoadingRequestCopy && (
+        <LoadingCopy>
+          <img src="/assets/loading.svg" />
+          <span>Gerando copy...</span>
+        </LoadingCopy>
+      )}
+      {!isLoadingRequestCopy && !copys.length && (
         <EmptyCopyContainer>
           <img src="/assets/empty-copy.svg" />
           <div>
@@ -24,7 +33,12 @@ export function CopyResponse() {
         <>
           <ul>
             {copys.map((cp) => (
-              <CopyChatMessageWave key={cp.title} copy={cp.description} title={cp.title} />
+              <CopyChatMessageWave
+                key={cp.title.split(':')[1]}
+                copy={cp.description.split(':')[1]}
+                title={cp.title.split(':')[1]}
+                createdAt={cp.createdAt}
+              />
             ))}
           </ul>
           <footer>

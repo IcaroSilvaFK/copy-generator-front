@@ -9,6 +9,8 @@ if (!process.env.NEXT_PUBLIC_API_TOKEN) {
 const schema = z.object({
   prompt: z.string(),
   title: z.string(),
+  maxToken: z.number(),
+  platform: z.string(),
 })
 
 interface IResponseFromOpenApiRequest {
@@ -32,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     }
 
-    const { prompt, title } = schema.parse(req.body)
+    const { prompt, title, maxToken, platform } = schema.parse(req.body)
 
     const requestCopy = await prismaClient.requestCopy.create({
       data: {
@@ -40,14 +42,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         description: prompt,
       },
     })
-    console.log(requestCopy)
+
     const payload = {
       model: 'gpt-3.5-turbo',
       messages: [
         {
           role: 'user',
           content: `
-      generate a title and copy with the following title ${title} and the following description ${prompt}
+      generate a title and copy with the following title ${title} and the following description ${prompt} and platform from copy ${platform} response in pt-br
     `,
         },
       ],
@@ -55,7 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
-      max_tokens: 200,
+      max_tokens: maxToken,
       n: 1,
     }
 
@@ -71,32 +73,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     ).then((data) => data.json())
 
-    console.log(response)
-
     const objectFromResponse = response?.choices.map((choice) => ({
       role: choice.message.role,
       finish_reason: choice.finish_reason,
       copy: {
         title: choice.message.content?.split('\n')[0],
         description: choice.message.content?.split('\n')[2],
+        createdAt: new Date(),
       },
     }))
-
-    console.log({
-      copyTitle: objectFromResponse[0].copy.title,
-      generatedCopy: objectFromResponse[0].copy.description,
-      requestedCopyId: requestCopy.id,
-    })
 
     await prismaClient.responseCopy.create({
       data: {
         copyTitle: objectFromResponse[0].copy.title,
         generatedCopy: objectFromResponse[0].copy.description,
         requestedCopyId: requestCopy.id,
+        createdAt: objectFromResponse[0].copy.createdAt,
       },
     })
 
-    res.status(200).json({ copy: objectFromResponse[0] })
+    res.status(200).json({ data: objectFromResponse[0] })
   } catch (err) {
     console.log(err)
 

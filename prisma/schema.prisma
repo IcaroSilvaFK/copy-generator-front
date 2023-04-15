@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model RequestCopy {
@@ -21,9 +20,10 @@ model RequestCopy {
 model ResponseCopy {
   id              String      @id @default(cuid())
   copyTitle       String      @map("copy_title")
-  generatedCopy   String      @map("generated_copy") @db.LongText
+  generatedCopy   String      @map("generated_copy")
   requestedCopyId String
   requestedCopy   RequestCopy @relation(fields: [requestedCopyId], references: [id])
+  createdAt       DateTime    @default(now()) @map("created_at")
 
   @@index([requestedCopyId])
   @@map("responses_copys")
