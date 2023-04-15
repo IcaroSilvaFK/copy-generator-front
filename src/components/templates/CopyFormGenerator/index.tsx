@@ -1,6 +1,4 @@
-import { useTheme } from 'styled-components'
-import Select, { StylesConfig } from 'react-select'
-import { toast } from 'react-toastify'
+import Select from 'react-select'
 import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { useAtom } from 'jotai'
@@ -12,6 +10,8 @@ import { requestedCopyAtom } from '../../../atoms/requestedCopyAtom'
 import { loadingRequestCopy } from '../../../atoms/loadingRequestCopy'
 
 import { ButtonCopy, Col, Container, Flex } from './styles'
+import { useToast } from '../../../hooks/useToast'
+import { useSelectStyles } from '../../../hooks/useSelectStyles'
 
 const schema = z.object({
   title: z.string().min(5),
@@ -39,7 +39,7 @@ interface IGeneratedCopyPayload {
 }
 
 export function CopyFormGenerator() {
-  const { colors } = useTheme()
+  const [selectStyles] = useSelectStyles()
   const {
     register,
     handleSubmit,
@@ -52,73 +52,32 @@ export function CopyFormGenerator() {
     },
     resolver: zodResolver(schema),
   })
-  const [selectedCopyType, setSelectedCopyType] = useState<SelectedCopyType>(null)
+  const [selectedCopyType, setSelectedCopyType] =
+    useState<SelectedCopyType>(null)
   const [copys, setCopys] = useAtom(requestedCopyAtom)
-  const [isLoadingRequestCopy, setIsLoadingRequestCopy] = useAtom(loadingRequestCopy)
+  const [isLoadingRequestCopy, setIsLoadingRequestCopy] =
+    useAtom(loadingRequestCopy)
   const [platform, setPlatform] = useState('')
+  const { toastError, toastSuccess, simpleToast } = useToast()
 
-  useEffect(() => {
-    if (errors.title || errors.copy) {
-      toast.error(
-        `O campo ${errors.title ? 'nome' : 'descrição'} precisa ser preenchido corretamente`,
-        {
-          position: toast.POSITION.TOP_CENTER,
-        }
-      )
-    }
-  }, [errors.copy, errors.title])
-
-  const selectStyles: StylesConfig = {
-    control(base, { menuIsOpen }) {
-      return {
-        ...base,
-        'borderColor': colors.gray[100],
-        'boxShadow': `0 0 0 1px ${menuIsOpen ? colors.black : 'transparent'}`,
-        ':hover': {
-          borderColor: colors.gray[100],
-        },
+  useEffect(
+    () => {
+      if (errors.title || errors.copy) {
+        toastError(
+          `O campo ${
+            errors.title ? 'nome' : 'descrição'
+          } precisa ser preenchido corretamente`,
+        )
       }
     },
-
-    option(base, { isFocused }) {
-      return {
-        ...base,
-        'backgroundColor': isFocused ? colors.black : 'transparent',
-        'color': isFocused ? colors.white : colors.black,
-        ':hover': {
-          background: colors.black,
-          color: colors.white,
-        },
-        ':active': {
-          background: colors.black,
-        },
-      }
-    },
-    singleValue(base) {
-      return {
-        ...base,
-        'alignItems': 'center',
-        'display': 'flex',
-
-        ':before': {
-          borderRadius: 10,
-          content: '" "',
-          display: 'block',
-          marginRight: 8,
-          height: 10,
-          width: 10,
-        },
-      }
-    },
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [errors.copy, errors.title],
+  )
 
   async function onSubmit(data: FormPropertiesType) {
     try {
       if (!selectedCopyType) {
-        toast('Selecione o tamanho da copy por favor.', {
-          position: toast.POSITION.TOP_CENTER,
-          draggable: true,
-        })
+        simpleToast('Selecione o tamanho da copy por favor')
         return
       }
       setIsLoadingRequestCopy(true)
@@ -139,16 +98,10 @@ export function CopyFormGenerator() {
         })
       ).json()
       setCopys([...copys, response.data.copy])
-      toast.success('Copy gerada com sucesso', {
-        position: toast.POSITION.TOP_CENTER,
-        draggable: true,
-      })
+      toastSuccess('Copy gerada com sucesso')
       reset()
     } catch (err) {
-      toast.error('Erro ao gerar o copy por favor tente novamente', {
-        position: toast.POSITION.TOP_CENTER,
-        draggable: true,
-      })
+      toastError('Erro ao gerar o copy por favor tente novamente')
     } finally {
       setIsLoadingRequestCopy(false)
     }
@@ -175,11 +128,18 @@ export function CopyFormGenerator() {
 
         <Col>
           <label>Nos diga o nome do seu serviço ou produto</label>
-          <input type="text" placeholder="Digite aqui..." {...register('title')} />
+          <input
+            type="text"
+            placeholder="Digite aqui..."
+            {...register('title')}
+          />
         </Col>
 
         <Col>
-          <label>Agora me de o máximo de detalhes possíveis sobre o sue produto e/ou serviço</label>
+          <label>
+            Agora me de o máximo de detalhes possíveis sobre o sue produto e/ou
+            serviço
+          </label>
           <textarea
             placeholder="Fale sobre o que você vende, os benefícios, seu diferencial do concorrente, como o produto/serviço pode resolver problemas ou atender às necessidades do público-alvo. Separe cada informação por linha!"
             {...register('copy')}

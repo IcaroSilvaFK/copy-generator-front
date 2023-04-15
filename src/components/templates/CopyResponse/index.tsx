@@ -17,15 +17,17 @@ export function CopyResponse() {
     <Container ref={parentRef}>
       {isLoadingRequestCopy && (
         <LoadingCopy>
-          <img src="/assets/loading.svg" />
+          <img src="/assets/loading.svg" alt="Loading" />
           <span>Gerando copy...</span>
         </LoadingCopy>
       )}
       {!isLoadingRequestCopy && !copys.length && (
         <EmptyCopyContainer>
-          <img src="/assets/empty-copy.svg" />
+          <img src="/assets/empty-copy.svg" alt="Empty copy" />
           <div>
-            <span>&quot;Preencha as informações do lado para gerarmos sua copy&quot;</span>
+            <span>
+              &quot;Preencha as informações do lado para gerarmos sua copy&quot;
+            </span>
           </div>
         </EmptyCopyContainer>
       )}
@@ -43,7 +45,9 @@ export function CopyResponse() {
           </ul>
           <footer>
             <IoIosCopy size={22} />
-            <span>Dica: Clique em cima da copy ou texto gerado para poder copiá-lo.</span>
+            <span>
+              Dica: Clique em cima da copy ou texto gerado para poder copiá-lo.
+            </span>
           </footer>
         </>
       )}

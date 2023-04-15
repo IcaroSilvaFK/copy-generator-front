@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
-import { prismaClient } from '../../../../infra/services/prisma'
 
 if (!process.env.NEXT_PUBLIC_API_TOKEN) {
   throw new Error('Missing env var from OpenAI')
@@ -24,7 +23,10 @@ interface IResponseFromOpenApiRequest {
   }[]
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   try {
     const method = req.method
 
@@ -66,11 +68,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN ?? ''}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN ?? ''}`,
         },
         method: 'POST',
         body: JSON.stringify(payload),
-      }
+      },
     ).then((data) => data.json())
 
     const objectFromResponse = response?.choices.map((choice) => ({

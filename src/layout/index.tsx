@@ -1,13 +1,13 @@
 import { ReactNode } from 'react'
 import { NavBar } from '../components/NavBar'
-import { Container,Nav } from './styles'
+import { Container, Nav } from './styles'
 
 interface ILayoutProps {
-  children:ReactNode
+  children: ReactNode
 }
 
-export function Layout(props:ILayoutProps){
-  const {children} = props
+export function Layout(props: ILayoutProps) {
+  const { children } = props
 
   return (
     <Container>
