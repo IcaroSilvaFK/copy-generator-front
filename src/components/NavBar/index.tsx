@@ -41,7 +41,7 @@ export function NavBar() {
         <b>Joao Pedro</b>
         <span>jhon.peter@hotmail.com</span>
         <button>
-          <img src="/assets/signOut.svg" />
+          <img src="/assets/signOut.svg" alt="sair" />
         </button>
       </footer>
     </Container>
