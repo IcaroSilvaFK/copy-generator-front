@@ -15,6 +15,7 @@ export const theme = {
     yellow: {
       500: '#FFEDB6',
     },
+    green: { 500: '#84FF90' },
   },
   fonts: {
     inter: "'Inter', sans-serif",

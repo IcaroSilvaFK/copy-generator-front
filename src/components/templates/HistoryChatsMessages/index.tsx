@@ -1,25 +1,23 @@
 import { IoIosCopy } from 'react-icons/io'
 
-import { copy } from '../../../mocks/copy-chat-messages'
 import { CopyChatMessageWave } from '../../CopyChatMessageWave'
 
 import { Container } from './styles'
+import { historyCopyAtom } from '../../../atoms/requestedCopyAtom'
+import { useAtom } from 'jotai'
 
-export function CopyResponse() {
+export function HistoryChatCopy() {
+  const [copys] = useAtom(historyCopyAtom)
+
   return (
     <Container>
-      {/* <EmptyCopyContainer>
-        <img src="/assets/empty-copy.svg" />
-        <div>
-          <span>&quot;Preencha as informações do lado para gerarmos sua copy&quot;</span>
-        </div>
-      </EmptyCopyContainer> */}
       <ul>
-        {copy.map((cp) => (
+        {copys.map((cp) => (
           <CopyChatMessageWave
-            key={cp.titulo}
-            copy={cp.descricao}
-            title={cp.titulo}
+            key={cp.createdAt}
+            copy={cp.description}
+            title={cp.title}
+            createdAt={cp.createdAt}
           />
         ))}
       </ul>

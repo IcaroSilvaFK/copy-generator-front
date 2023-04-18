@@ -1,6 +1,10 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-export const Container = styled.div`
+type IContainerProps = {
+  isLowGrid?: boolean
+}
+
+export const Container = styled.div<IContainerProps>`
   display: grid;
   grid-template-columns: 250px 1fr 1fr;
   width: 100%;
@@ -8,6 +12,12 @@ export const Container = styled.div`
 
   max-width: 1260px;
   margin: 0 auto;
+
+  ${({ isLowGrid }) =>
+    isLowGrid &&
+    css`
+      grid-template-columns: 250px 1fr;
+    `}
 `
 
 export const Nav = styled.nav`

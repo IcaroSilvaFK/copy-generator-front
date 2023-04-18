@@ -7,3 +7,5 @@ type RequestedCopyPayload = {
 }[]
 
 export const requestedCopyAtom = atom<RequestedCopyPayload>([])
+
+export const historyCopyAtom = atom<RequestedCopyPayload>([])

@@ -4,13 +4,14 @@ import { Container, Nav } from './styles'
 
 interface ILayoutProps {
   children: ReactNode
+  isLowGrid?: boolean
 }
 
 export function Layout(props: ILayoutProps) {
-  const { children } = props
+  const { children, isLowGrid } = props
 
   return (
-    <Container>
+    <Container isLowGrid={isLowGrid}>
       <Nav>
         <NavBar />
       </Nav>

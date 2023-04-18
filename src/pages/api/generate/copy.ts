@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
+import axios from 'axios'
 
 if (!process.env.NEXT_PUBLIC_API_TOKEN) {
   throw new Error('Missing env var from OpenAI')
@@ -46,7 +47,7 @@ export default async function handler(
     // })
 
     const payload = {
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-3.5-turbo-0301',
       messages: [
         {
           role: 'user',
@@ -63,19 +64,20 @@ export default async function handler(
       n: 1,
     }
 
-    const response: IResponseFromOpenApiRequest = await fetch(
+    const { data } = await axios.post<IResponseFromOpenApiRequest>(
       'https://api.openai.com/v1/chat/completions',
+      payload,
       {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN ?? ''}`,
         },
-        method: 'POST',
-        body: JSON.stringify(payload),
       },
-    ).then((data) => data.json())
+    )
 
-    const objectFromResponse = response?.choices.map((choice) => ({
+    console.log({ data })
+
+    const objectFromResponse = data?.choices?.map((choice) => ({
       role: choice.message.role,
       finish_reason: choice.finish_reason,
       copy: {

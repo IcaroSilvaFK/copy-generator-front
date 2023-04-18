@@ -98,6 +98,7 @@ export function CopyFormGenerator() {
         })
       ).json()
       setCopys([...copys, response.data.copy])
+
       toastSuccess('Copy gerada com sucesso')
       reset()
     } catch (err) {
@@ -137,7 +138,7 @@ export function CopyFormGenerator() {
 
         <Col>
           <label>
-            Agora me de o máximo de detalhes possíveis sobre o sue produto e/ou
+            Agora me de o máximo de detalhes possíveis sobre o seu produto e/ou
             serviço
           </label>
           <textarea
