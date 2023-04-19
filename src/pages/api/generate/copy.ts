@@ -39,13 +39,6 @@ export default async function handler(
 
     const { prompt, title, maxToken, platform } = schema.parse(req.body)
 
-    // const requestCopy = await prismaClient.requestCopy.create({
-    //   data: {
-    //     copyTitle: title,
-    //     description: prompt,
-    //   },
-    // })
-
     const payload = {
       model: 'gpt-3.5-turbo-0301',
       messages: [
@@ -75,8 +68,6 @@ export default async function handler(
       },
     )
 
-    console.log({ data })
-
     const objectFromResponse = data?.choices?.map((choice) => ({
       role: choice.message.role,
       finish_reason: choice.finish_reason,
@@ -86,14 +77,6 @@ export default async function handler(
         createdAt: new Date(),
       },
     }))
-
-    // await prismaClient.responseCopy.create({
-    //   data: {
-    //     copyTitle: objectFromResponse[0].copy.title,
-    //     generatedCopy: objectFromResponse[0].copy.description,
-    //     requestedCopyId: requestCopy.id,
-    //   },
-    // })
 
     res.status(200).json({ data: objectFromResponse[0] })
   } catch (err) {

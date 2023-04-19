@@ -6,5 +6,6 @@
     "statusBarItem.hoverBackground": "#a383ec",
     "statusBarItem.remoteBackground": "#8257e5",
     "statusBarItem.remoteForeground": "#e7e7e7"
-  }
+  },
+  "compile-hero.disable-compile-files-on-did-save-code": true
 }

@@ -50,7 +50,7 @@ export const Container = styled.div`
         justify-content: space-between;
 
         b {
-          max-width: 400px;
+          max-width: 350px;
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 1;

@@ -8,10 +8,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { BiMenu, BiMenuAltLeft } from 'react-icons/bi'
 import { requestedCopyAtom } from '../../../atoms/requestedCopyAtom'
 import { loadingRequestCopy } from '../../../atoms/loadingRequestCopy'
+import { useSelectStyles } from '../../../hooks/useSelectStyles'
+import { useToast } from '../../../hooks/useToast'
 
 import { ButtonCopy, Col, Container, Flex } from './styles'
-import { useToast } from '../../../hooks/useToast'
-import { useSelectStyles } from '../../../hooks/useSelectStyles'
 
 const schema = z.object({
   title: z.string().min(5),
@@ -43,7 +43,6 @@ export function CopyFormGenerator() {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<FormPropertiesType>({
     defaultValues: {
@@ -52,6 +51,7 @@ export function CopyFormGenerator() {
     },
     resolver: zodResolver(schema),
   })
+
   const [selectedCopyType, setSelectedCopyType] =
     useState<SelectedCopyType>(null)
   const [copys, setCopys] = useAtom(requestedCopyAtom)
@@ -84,7 +84,7 @@ export function CopyFormGenerator() {
       const payload = {
         prompt: data.copy,
         title: data.title,
-        maxToken: selectedCopyType === 'long' ? 500 : 200,
+        maxToken: selectedCopyType === 'long' ? 500 : 300,
         platform,
       }
 
@@ -97,10 +97,11 @@ export function CopyFormGenerator() {
           body: JSON.stringify(payload),
         })
       ).json()
-      setCopys([...copys, response.data.copy])
+      console.log(response.data.copy)
+      setCopys([response.data.copy, ...copys])
 
       toastSuccess('Copy gerada com sucesso')
-      reset()
+      // reset()
     } catch (err) {
       toastError('Erro ao gerar o copy por favor tente novamente')
     } finally {
