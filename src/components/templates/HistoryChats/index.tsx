@@ -1,14 +1,26 @@
 import { formatDistanceToNow } from 'date-fns'
 import ptBr from 'date-fns/locale/pt-BR'
-
-import { Container } from './styles'
-import { RequestCopy, ResponseCopy } from '@prisma/client'
-import axios from 'axios'
-import { historyCopyAtom } from '../../../atoms/requestedCopyAtom'
 import { useAtom } from 'jotai'
+import axios from 'axios'
+
+import { historyCopyAtom } from '../../../atoms/requestedCopyAtom'
+import { Container } from './styles'
+
+interface IRequestCopyProps {
+  messages: {
+    createdAt: string
+    generatedCopy: string
+    copyTitle: string
+  }[]
+}
 
 interface IHistoryChatsProps {
-  copys: RequestCopy[]
+  copys: {
+    description: string
+    createdAt: string
+    id: string
+    copyTitle: string
+  }[]
 }
 
 export function HistoryChats(props: IHistoryChatsProps) {
@@ -17,9 +29,7 @@ export function HistoryChats(props: IHistoryChatsProps) {
 
   async function handleRequestHistoryFromCopy(id: string) {
     try {
-      const { data } = await axios.get<{ messages: ResponseCopy[] }>(
-        `/api/copy/${id}`,
-      )
+      const { data } = await axios.get<IRequestCopyProps>(`/api/copy/${id}`)
 
       const mappedCopys = data.messages.map((cop) => ({
         createdAt: new Date(cop.createdAt).toISOString(),
