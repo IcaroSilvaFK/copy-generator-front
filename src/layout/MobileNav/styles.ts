@@ -3,7 +3,7 @@ import { IoMdArrowDropup } from 'react-icons/io'
 
 export const Container = styled.nav`
   position: absolute;
-  z-index: 1;
+  z-index: 9999;
 
   @media screen and (min-width: 1100px) {
     display: none;
