@@ -12,29 +12,23 @@ export function MobileNav() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    window.addEventListener('click', (e) => {
-      if (!isOpenNav) return
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setIsOpenNav(false)
-      }
-    })
+    window.addEventListener('click', handleObserverClickInToNavContextMenu)
 
     return () => {
-      window.removeEventListener('click', (e) => {
-        if (!isOpenNav) return
-        if (
-          containerRef.current &&
-          !containerRef.current.contains(e.target as Node)
-        ) {
-          setIsOpenNav(false)
-        }
-      })
+      window.removeEventListener('click', handleObserverClickInToNavContextMenu)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  function handleObserverClickInToNavContextMenu(e: MouseEvent) {
+    if (!isOpenNav) return
+    if (
+      containerRef.current &&
+      !containerRef.current.contains(e.target as Node)
+    ) {
+      setIsOpenNav(false)
+    }
+  }
 
   return (
     <Container ref={containerRef}>
