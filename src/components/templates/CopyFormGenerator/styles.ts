@@ -89,6 +89,18 @@ export const Flex = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media screen and (max-width: 400px) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    div {
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+  }
 `
 
 export const ButtonCopy = styled.div<ButtonCopyProps>`
@@ -123,4 +135,11 @@ export const ButtonCopy = styled.div<ButtonCopyProps>`
         background: ${({ theme }) => darken(0.1, theme.colors.blue[500])};
       }
     `}
+
+  @media screen and (max-width: 400px) {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { NavBar } from '../components/NavBar'
 import { Container, Nav } from './styles'
+import { MobileNav } from './MobileNav'
 
 interface ILayoutProps {
   children: ReactNode
@@ -15,6 +16,7 @@ export function Layout(props: ILayoutProps) {
       <Nav>
         <NavBar />
       </Nav>
+      <MobileNav />
       {children}
     </Container>
   )

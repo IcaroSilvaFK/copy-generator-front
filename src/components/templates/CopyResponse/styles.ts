@@ -34,6 +34,10 @@ export const Container = styled.div`
 
     background: ${({ theme }) => theme.colors.yellow[500]};
   }
+
+  @media screen and (max-width: 800px) {
+    overflow-y: visible;
+  }
 `
 
 export const EmptyCopyContainer = styled.div`
@@ -57,6 +61,9 @@ export const EmptyCopyContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    span {
+      text-align: center;
+    }
   }
 `
 
