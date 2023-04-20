@@ -1,20 +1,45 @@
 import { TbFileText } from 'react-icons/tb'
 import { FaHistory } from 'react-icons/fa'
 import { HiMenuAlt1 } from 'react-icons/hi'
-import { MdClose } from 'react-icons/md'
 
 import { Link } from '../../components/ActiveLink'
 
 import { Container, TouchButton, Nav, Indicator } from './styles'
-import { useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 export function MobileNav() {
   const [isOpenNav, setIsOpenNav] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    window.addEventListener('click', (e) => {
+      if (!isOpenNav) return
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpenNav(false)
+      }
+    })
+
+    return () => {
+      window.removeEventListener('click', (e) => {
+        if (!isOpenNav) return
+        if (
+          containerRef.current &&
+          !containerRef.current.contains(e.target as Node)
+        ) {
+          setIsOpenNav(false)
+        }
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
-    <Container>
+    <Container ref={containerRef}>
       <TouchButton onClick={() => setIsOpenNav((prev) => !prev)}>
-        {!isOpenNav ? <HiMenuAlt1 size={22} /> : <MdClose size={22} />}
+        <HiMenuAlt1 size={22} />
       </TouchButton>
       {isOpenNav && (
         <Nav>
