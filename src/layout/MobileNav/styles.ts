@@ -1,6 +1,17 @@
 import styled from 'styled-components'
 import { IoMdArrowDropup } from 'react-icons/io'
 
+export const Overlay = styled.div`
+  background: rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding-top: 45px;
+`
+
 export const Container = styled.nav`
   position: absolute;
   z-index: 9999;
@@ -27,6 +38,8 @@ export const Nav = styled.div`
   padding: 12px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+  max-width: 300px;
 
   footer {
     display: flex;
