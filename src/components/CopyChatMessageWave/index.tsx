@@ -5,18 +5,17 @@ import { toast } from 'react-toastify'
 import { Container } from './styles'
 
 interface ICopyMessageWaveProps {
-  title: string
   copy: string
   createdAt?: string
 }
 
 export function CopyChatMessageWave(props: ICopyMessageWaveProps) {
-  const { copy, title, createdAt } = props
+  const { copy, createdAt } = props
 
   async function copyToClipboard() {
     try {
       await navigator.clipboard.writeText(`
-        ${title}\n
+      
         ${copy}
       `)
 
@@ -35,7 +34,6 @@ export function CopyChatMessageWave(props: ICopyMessageWaveProps) {
   return (
     <Container onClick={copyToClipboard}>
       <header>
-        <strong>{title}</strong>
         {createdAt && (
           <span>
             {formatDistanceToNow(new Date(createdAt), {

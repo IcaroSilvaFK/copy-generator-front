@@ -5,13 +5,17 @@ import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { CopyChatMessageWave } from '../../CopyChatMessageWave'
 
 import { Container, EmptyCopyContainer, LoadingCopy } from './styles'
-import { requestedCopyAtom } from '../../../atoms/requestedCopyAtom'
+import {
+  createdCopy,
+  requestedCopyAtom,
+} from '../../../atoms/requestedCopyAtom'
 import { loadingRequestCopy } from '../../../atoms/loadingRequestCopy'
 
 export function CopyResponse() {
   const [copys] = useAtom(requestedCopyAtom)
   const [isLoadingRequestCopy] = useAtom(loadingRequestCopy)
   const [parentRef] = useAutoAnimate<HTMLDivElement>()
+  const [dateCopyCreated] = useAtom(createdCopy)
 
   return (
     <Container ref={parentRef}>
@@ -34,14 +38,11 @@ export function CopyResponse() {
       {copys.length > 0 && (
         <>
           <ul>
-            {copys.map((cp) => (
-              <CopyChatMessageWave
-                key={cp.title.split(':')[1]}
-                copy={cp.description.split(':')[1]}
-                title={cp.title.split(':')[1]}
-                createdAt={cp.createdAt}
-              />
-            ))}
+            <CopyChatMessageWave
+              key={copys}
+              copy={copys}
+              createdAt={dateCopyCreated?.toString()}
+            />
           </ul>
           <footer>
             <IoIosCopy size={22} />

@@ -1,11 +1,6 @@
 import { atom } from 'jotai'
 
-type RequestedCopyPayload = {
-  title: string
-  description: string
-  createdAt: string
-}[]
+export const requestedCopyAtom = atom<string>('')
+export const createdCopy = atom<Date | null>(null)
 
-export const requestedCopyAtom = atom<RequestedCopyPayload>([])
-
-export const historyCopyAtom = atom<RequestedCopyPayload>([])
+export const historyCopyAtom = atom<[]>([])

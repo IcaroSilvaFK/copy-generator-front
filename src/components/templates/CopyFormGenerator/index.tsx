@@ -6,7 +6,10 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { BiMenu, BiMenuAltLeft } from 'react-icons/bi'
-import { requestedCopyAtom } from '../../../atoms/requestedCopyAtom'
+import {
+  createdCopy,
+  requestedCopyAtom,
+} from '../../../atoms/requestedCopyAtom'
 import { loadingRequestCopy } from '../../../atoms/loadingRequestCopy'
 import { useSelectStyles } from '../../../hooks/useSelectStyles'
 import { useToast } from '../../../hooks/useToast'
@@ -28,15 +31,15 @@ const options = [
 
 type SelectedCopyType = 'long' | 'short' | null
 
-interface IGeneratedCopyPayload {
-  data: {
-    copy: {
-      description: string
-      title: string
-      createdAt: string
-    }
-  }
-}
+// interface IGeneratedCopyPayload {
+//   data: {
+//     copy: {
+//       description: string
+//       title: string
+//       createdAt: string
+//     }
+//   }
+// }
 
 export function CopyFormGenerator() {
   const [selectStyles] = useSelectStyles()
@@ -44,6 +47,7 @@ export function CopyFormGenerator() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormPropertiesType>({
     defaultValues: {
       copy: '',
@@ -54,7 +58,8 @@ export function CopyFormGenerator() {
 
   const [selectedCopyType, setSelectedCopyType] =
     useState<SelectedCopyType>(null)
-  const [copys, setCopys] = useAtom(requestedCopyAtom)
+  const [, setCopys] = useAtom(requestedCopyAtom)
+  const [, setCreatedCopy] = useAtom(createdCopy)
   const [isLoadingRequestCopy, setIsLoadingRequestCopy] =
     useAtom(loadingRequestCopy)
   const [platform, setPlatform] = useState('')
@@ -74,7 +79,7 @@ export function CopyFormGenerator() {
     [errors.copy, errors.title],
   )
 
-  async function onSubmit(data: FormPropertiesType) {
+  async function onSubmit(fields: FormPropertiesType) {
     try {
       if (!selectedCopyType) {
         simpleToast('Selecione o tamanho da copy por favor')
@@ -82,26 +87,48 @@ export function CopyFormGenerator() {
       }
       setIsLoadingRequestCopy(true)
       const payload = {
-        prompt: data.copy,
-        title: data.title,
+        prompt: fields.copy,
+        title: fields.title,
         maxToken: selectedCopyType === 'long' ? 500 : 300,
         platform,
       }
 
-      const response: IGeneratedCopyPayload = await (
-        await fetch('/api/generate/copy', {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-          body: JSON.stringify(payload),
-        })
-      ).json()
-      console.log(response.data.copy)
-      setCopys([response.data.copy, ...copys])
+      const response = await fetch('/api/generate/copy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        throw new Error(response.statusText)
+      }
+      const data = response.body
+
+      if (!data) {
+        return
+      }
+
+      const reader = data.getReader()
+
+      const decoder = new TextDecoder()
+      let done = false
+
+      setCreatedCopy(new Date())
+      setCopys('')
+      while (!done) {
+        const { value, done: doneReading } = await reader.read()
+
+        done = doneReading
+
+        const chunkValue = decoder.decode(value)
+
+        setCopys((prev) => prev + chunkValue)
+      }
 
       toastSuccess('Copy gerada com sucesso')
-      // reset()
+      reset()
     } catch (err) {
       toastError('Erro ao gerar o copy por favor tente novamente')
     } finally {

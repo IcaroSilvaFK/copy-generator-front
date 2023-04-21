@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
-import axios from 'axios'
+
+import { OpenAIStream } from '../../../utils/openAiStream'
 
 if (!process.env.NEXT_PUBLIC_API_TOKEN) {
   throw new Error('Missing env var from OpenAI')
@@ -13,31 +13,17 @@ const schema = z.object({
   platform: z.string(),
 })
 
-interface IResponseFromOpenApiRequest {
-  name: string
-  choices: {
-    finish_reason: string
-    message: {
-      role: string
-      content: string
-    }
-  }[]
+export const config = {
+  runtime: 'experimental-edge',
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export default async function handler(req: Request) {
   try {
-    const method = req.method
-
-    if (method !== 'POST') {
-      res.status(405).json({
-        message: 'METHOD NOT ALLOWED',
-      })
+    if (req.method !== 'POST') {
+      return new Response('Method is not allowed', { status: 405 })
     }
 
-    const { prompt, title, maxToken, platform } = schema.parse(req.body)
+    const { maxToken, platform, prompt, title } = schema.parse(await req.json())
 
     const payload = {
       model: 'gpt-3.5-turbo-0301',
@@ -54,36 +40,39 @@ export default async function handler(
       frequency_penalty: 0,
       presence_penalty: 0,
       max_tokens: maxToken,
+      stream: true,
       n: 1,
     }
 
-    const { data } = await axios.post<IResponseFromOpenApiRequest>(
-      'https://api.openai.com/v1/chat/completions',
-      payload,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN ?? ''}`,
-        },
-      },
-    )
+    const stream = await OpenAIStream(payload)
 
-    const objectFromResponse = data?.choices?.map((choice) => ({
-      role: choice.message.role,
-      finish_reason: choice.finish_reason,
-      copy: {
-        title: choice.message.content?.split('\n')[0],
-        description: choice.message.content?.split('\n')[2],
-        createdAt: new Date(),
-      },
-    }))
+    return new Response(stream, { status: 200 })
 
-    res.status(200).json({ data: objectFromResponse[0] })
+    // const { data } = await axios.post<IResponseFromOpenApiRequest>(
+    //   'https://api.openai.com/v1/chat/completions',
+    //   payload,
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN ?? ''}`,
+    //     },
+    //   },
+    // )
+
+    // const objectFromResponse = data?.choices?.map((choice) => ({
+    //   role: choice.message.role,
+    //   finish_reason: choice.finish_reason,
+    //   copy: {
+    //     title: choice.message.content?.split('\n')[0],
+    //     description: choice.message.content?.split('\n')[2],
+    //     createdAt: new Date(),
+    //   },
+    // }))
+
+    // res.status(200).json({ data: {} })
   } catch (err) {
     console.log(err)
 
-    res.status(500).json({
-      error: err,
-    })
+    return new Response(err as null)
   }
 }
