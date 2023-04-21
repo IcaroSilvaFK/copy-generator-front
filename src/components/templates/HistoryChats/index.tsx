@@ -1,3 +1,6 @@
+export function Console() {
+  console.log('a')
+}
 // import { formatDistanceToNow } from 'date-fns'
 // import ptBr from 'date-fns/locale/pt-BR'
 // import { useAtom } from 'jotai'
