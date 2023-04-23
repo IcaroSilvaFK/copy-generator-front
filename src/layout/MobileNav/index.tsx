@@ -18,7 +18,7 @@ export function MobileNav() {
       </TouchButton>
       {isOpenNav && (
         <Overlay onClick={() => setIsOpenNav(false)}>
-          <Nav onClick={(e) => e.stopPropagation()}>
+          <Nav onClick={(e) => e.stopPropagation()} data-testid="mobile-nav">
             <Indicator size={32} />
             <ul>
               <li>
