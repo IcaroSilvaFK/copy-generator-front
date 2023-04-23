@@ -2,6 +2,10 @@ import styled from 'styled-components'
 import { Root } from '@radix-ui/react-checkbox'
 
 export const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   header {
     display: flex;
     align-items: center;
@@ -38,4 +42,11 @@ export const CheckBoxRoot = styled(Root)`
   &[data-state='checked'] {
     background: ${({ theme }) => theme.colors.white};
   }
+`
+
+export const ContainerPaymentDetails = styled.div`
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.gray[100]};
+  border-radius: 8px;
 `

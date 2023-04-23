@@ -1,8 +1,9 @@
 import { formatDistanceToNow } from 'date-fns'
 import ptBr from 'date-fns/locale/pt-BR'
-import { toast } from 'react-toastify'
 
 import { Container } from './styles'
+import { writeTextToClipboard } from '../../../utils/copyToClipBoard'
+import { useToast } from '../../../hooks/useToast'
 
 interface ICopyMessageWaveProps {
   copy: string
@@ -11,23 +12,16 @@ interface ICopyMessageWaveProps {
 
 export function CopyChatMessageWave(props: ICopyMessageWaveProps) {
   const { copy, createdAt } = props
+  const { toastSuccess, toastError } = useToast()
 
   async function copyToClipboard() {
     try {
-      await navigator.clipboard.writeText(`
-      
-        ${copy}
-      `)
-
-      toast.success('Copy copiada com sucesso', {
-        position: toast.POSITION.TOP_CENTER,
-      })
+      await writeTextToClipboard(copy)
+      toastSuccess('Copy copiada com sucesso')
     } catch (err) {
       console.error(err)
 
-      toast.error('Problemas ao copiar o texto por favor tente novamente.', {
-        position: toast.POSITION.TOP_CENTER,
-      })
+      toastError('Problemas ao copiar o texto por favor tente novamente.')
     }
   }
 

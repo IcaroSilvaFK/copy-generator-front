@@ -1,5 +1,6 @@
 import { FaHistory } from 'react-icons/fa'
 import { TbFileText } from 'react-icons/tb'
+import { IoImagesOutline } from 'react-icons/io5'
 
 import { Link } from '../ActiveLink'
 import { Container } from './styles'
@@ -16,6 +17,12 @@ export function NavBar() {
           <Link href="/copy">
             <TbFileText size={22} />
             <span>Criador de copy</span>
+          </Link>
+        </li>
+        <li>
+          <Link href="/legend">
+            <IoImagesOutline size={22} />
+            <span>Criador de legenda</span>
           </Link>
         </li>
         <li>

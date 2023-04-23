@@ -4,7 +4,7 @@ import { HiMenuAlt1 } from 'react-icons/hi'
 import { MdOutlineClose } from 'react-icons/md'
 import { useState } from 'react'
 
-import { Link } from '../../components/ActiveLink'
+import { Link } from '../../components/atoms/ActiveLink'
 
 import { Container, TouchButton, Nav, Indicator, Overlay } from './styles'
 

@@ -16,7 +16,13 @@ export function Link(props: ILinkProps) {
 
   return (
     <NextLink href={href}>
-      <Container isActive={isActive}>{children}</Container>
+      <Container
+        role="link"
+        isActive={isActive}
+        className={isActive ? 'active' : ''}
+      >
+        {children}
+      </Container>
     </NextLink>
   )
 }

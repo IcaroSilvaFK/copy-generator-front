@@ -2,14 +2,15 @@ import { IoIosCopy } from 'react-icons/io'
 import { useAtom } from 'jotai'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 
-import { CopyChatMessageWave } from '../../CopyChatMessageWave'
+import { CopyChatMessageWave } from '../../atoms/CopyChatMessageWave'
 
-import { Container, EmptyCopyContainer, LoadingCopy } from './styles'
+import { Container, LoadingCopy } from './styles'
 import {
   createdCopy,
   requestedCopyAtom,
 } from '../../../atoms/requestedCopyAtom'
 import { loadingRequestCopy } from '../../../atoms/loadingRequestCopy'
+import { EmptyChat } from '../../atoms/EmpytChat'
 
 export function CopyResponse() {
   const [copys] = useAtom(requestedCopyAtom)
@@ -26,14 +27,7 @@ export function CopyResponse() {
         </LoadingCopy>
       )}
       {!isLoadingRequestCopy && !copys.length && (
-        <EmptyCopyContainer>
-          <img src="/assets/empty-copy.svg" alt="Empty copy" />
-          <div>
-            <span>
-              &quot;Preencha as informações do lado para gerarmos sua copy&quot;
-            </span>
-          </div>
-        </EmptyCopyContainer>
+        <EmptyChat message="Preencha as informações do lado para gerarmos sua copy" />
       )}
       {copys.length > 0 && (
         <>

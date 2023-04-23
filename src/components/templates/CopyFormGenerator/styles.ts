@@ -25,24 +25,9 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 22px;
-
-    > button {
-      background: ${({ theme }) => theme.colors.blue[500]};
-      color: ${({ theme }) => theme.colors.white};
-      padding: 10px;
-      border-radius: 8px;
-      align-self: flex-end;
-      transition: all linear 0.3s;
-
-      &:hover {
-        background: ${({ theme }) =>
-          transparentize(0.1, theme.colors.blue[500])};
-      }
-
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.6;
-      }
+    footer {
+      display: flex;
+      justify-content: flex-end;
     }
   }
 `
