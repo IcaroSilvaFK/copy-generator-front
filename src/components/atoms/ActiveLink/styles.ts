@@ -27,6 +27,8 @@ export const Container = styled.a<ContainerProps>`
 
   position: relative;
 
+  font-size: 0.875rem;
+
   ${({ isActive, theme }) =>
     isActive &&
     css`

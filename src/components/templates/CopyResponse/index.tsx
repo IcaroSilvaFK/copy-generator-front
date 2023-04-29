@@ -6,6 +6,7 @@ import { CopyChatMessageWave } from '../../atoms/CopyChatMessageWave'
 
 import { Container, LoadingCopy } from './styles'
 import {
+  arrCopy,
   createdCopy,
   requestedCopyAtom,
 } from '../../../atoms/requestedCopyAtom'
@@ -17,6 +18,9 @@ export function CopyResponse() {
   const [isLoadingRequestCopy] = useAtom(loadingRequestCopy)
   const [parentRef] = useAutoAnimate<HTMLDivElement>()
   const [dateCopyCreated] = useAtom(createdCopy)
+  const [requestedCopy] = useAtom(arrCopy)
+
+  console.log({ requestedCopy })
 
   return (
     <Container ref={parentRef}>
@@ -29,23 +33,30 @@ export function CopyResponse() {
       {!isLoadingRequestCopy && !copys.length && (
         <EmptyChat message="Preencha as informações do lado para gerarmos sua copy" />
       )}
+
       {copys.length > 0 && (
-        <>
-          <ul>
-            <CopyChatMessageWave
-              key={copys}
-              copy={copys}
-              createdAt={dateCopyCreated?.toString()}
-            />
-          </ul>
-          <footer>
-            <IoIosCopy size={22} />
-            <span>
-              Dica: Clique em cima da copy ou texto gerado para poder copiá-lo.
-            </span>
-          </footer>
-        </>
+        <ul>
+          <CopyChatMessageWave
+            key={copys}
+            copy={copys}
+            createdAt={dateCopyCreated?.toString()}
+          />
+        </ul>
       )}
+      {requestedCopy?.map((copy) => (
+        <CopyChatMessageWave
+          key={copy.title}
+          copy={copy.copy}
+          createdAt={dateCopyCreated?.toString()}
+        />
+      ))}
+
+      <footer>
+        <IoIosCopy size={22} />
+        <span>
+          Dica: Clique em cima da copy ou texto gerado para poder copiá-lo.
+        </span>
+      </footer>
     </Container>
   )
 }

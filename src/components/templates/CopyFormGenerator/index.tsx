@@ -4,6 +4,7 @@ import { useAtom } from 'jotai'
 import { BiMenu, BiMenuAltLeft } from 'react-icons/bi'
 
 import {
+  arrCopy,
   createdCopy,
   requestedCopyAtom,
 } from '../../../atoms/requestedCopyAtom'
@@ -17,16 +18,20 @@ import { CreateCopyFormProperties } from '../../../schemas/CreateCopy.schema'
 import { useFormCreateCopy } from '../../../hooks/useFormCreateCopy'
 import { options } from './constants'
 import { createCopyReaderStream } from '../../../services/createCopyReaderStream'
+import { InputRoot } from '../../atoms/Inputs'
+import { useSession } from 'next-auth/react'
 
 type SelectedCopyType = 'long' | 'short' | null
 
 export function CopyFormGenerator() {
+  const { status } = useSession()
   const [selectStyles] = useSelectStyles()
   const { register, reset, handleSubmit } = useFormCreateCopy()
 
   const [selectedCopyType, setSelectedCopyType] =
     useState<SelectedCopyType>(null)
-  const [, setCopys] = useAtom(requestedCopyAtom)
+  const [currentCopy, setCopy] = useAtom(requestedCopyAtom)
+  const [, setArrCopy] = useAtom(arrCopy)
   const [, setCreatedCopy] = useAtom(createdCopy)
   const [isLoadingRequestCopy, setIsLoadingRequestCopy] =
     useAtom(loadingRequestCopy)
@@ -54,7 +59,7 @@ export function CopyFormGenerator() {
       let done = false
 
       setCreatedCopy(new Date())
-      setCopys('')
+      setCopy('')
       while (!done) {
         const { value, done: doneReading } = await reader.read()
 
@@ -62,11 +67,14 @@ export function CopyFormGenerator() {
 
         const chunkValue = decoder.decode(value)
 
-        setCopys((prev) => prev + chunkValue)
+        setCopy((prev) => prev + chunkValue)
       }
-
+      if (currentCopy.length) {
+        console.log(currentCopy)
+      }
       toastSuccess('Copy gerada com sucesso')
-      reset()
+
+      // reset()
     } catch (err) {
       toastError('Erro ao gerar o copy por favor tente novamente')
     } finally {
@@ -80,8 +88,10 @@ export function CopyFormGenerator() {
         <h3>Que tal produzirmos uma copy persuasiva?</h3>
       </header>
       <form onSubmit={handleSubmit(onSubmit)} role="form">
-        <S.Col>
-          <label>Para qual plataforma irá usar a copy?</label>
+        <InputRoot.InputContainer>
+          <InputRoot.Label>
+            Para qual plataforma irá usar a copy?
+          </InputRoot.Label>
           <Select
             options={options}
             styles={selectStyles}
@@ -91,27 +101,29 @@ export function CopyFormGenerator() {
               setPlatform(value)
             }}
           />
-        </S.Col>
+        </InputRoot.InputContainer>
 
-        <S.Col>
-          <label>Nos diga o nome do seu serviço ou produto</label>
-          <input
+        <InputRoot.InputContainer>
+          <InputRoot.Label>
+            Nos diga o nome do seu serviço ou produto
+          </InputRoot.Label>
+          <InputRoot.Input
             type="text"
             placeholder="Digite aqui..."
             {...register('title')}
           />
-        </S.Col>
+        </InputRoot.InputContainer>
 
-        <S.Col>
-          <label>
+        <InputRoot.InputContainer>
+          <InputRoot.Label>
             Agora me de o máximo de detalhes possíveis sobre o seu produto e/ou
             serviço
-          </label>
-          <textarea
+          </InputRoot.Label>
+          <InputRoot.TextArea
             placeholder="Fale sobre o que você vende, os benefícios, seu diferencial do concorrente, como o produto/serviço pode resolver problemas ou atender às necessidades do público-alvo. Separe cada informação por linha!"
             {...register('copy')}
           />
-        </S.Col>
+        </InputRoot.InputContainer>
         <S.Flex>
           <S.ButtonCopy
             isActive={selectedCopyType === 'long'}
@@ -129,9 +141,11 @@ export function CopyFormGenerator() {
           </S.ButtonCopy>
         </S.Flex>
         <footer>
-          <Button variant="solid" disabled={isLoadingRequestCopy}>
-            Gerar minha copy
-          </Button>
+          {status === 'authenticated' && (
+            <Button variant="solid" disabled={isLoadingRequestCopy}>
+              Gerar minha copy
+            </Button>
+          )}
         </footer>
       </form>
     </S.Container>

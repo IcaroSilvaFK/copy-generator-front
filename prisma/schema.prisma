@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model QuantityGeneratedCopy {
+  id        String @id @default(cuid())
+  userEmail String @map("user_email")
+  amount    Int
+
+  @@map("quantity_generated_copys")
+}
+
+model PlainSelectedUser {
+  id        String @id @default(cuid())
+  userEmail String @unique @map("user_email")
+  plain     String
+  rateLimit Int    @map("rate_limit")
+
+  @@map("plain_selected_user")
+}

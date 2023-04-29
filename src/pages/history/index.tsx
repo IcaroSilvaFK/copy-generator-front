@@ -1,5 +1,6 @@
 // import { GetServerSideProps } from 'next'
 // import { HistoryChats } from '../../components/templates/HistoryChats'
+import { Maintenance } from '../../components/templates/Maintenance'
 import { Layout } from '../../layout'
 // import { prismaClient } from '../../../infra/services/prisma'
 // import { RequestCopy } from '@prisma/client'
@@ -11,6 +12,7 @@ export default function Page() {
     <Layout>
       {/* <HistoryChats copys={copys} /> 
       <HistoryChatCopy /> */}
+      <Maintenance />
     </Layout>
   )
 }

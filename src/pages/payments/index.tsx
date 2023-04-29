@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Layout } from '../../layout'
-import { Container } from '../../styles/pages/payments.styles'
 import { PaymentsMethods } from '../../components/templates/PaymentsMethods'
+import * as S from '../../styles/pages/payments.styles'
 
 type TabOpenProps = 'history' | 'plans' | 'payment'
 
@@ -10,7 +10,7 @@ export default function Page() {
 
   return (
     <Layout isLowGrid>
-      <Container>
+      <S.Container>
         <header>
           <h2>Faturas</h2>
           <p>Aqui você encontra seus pagamentos anteriores e os futuros</p>
@@ -38,7 +38,7 @@ export default function Page() {
           </nav>
         </header>
         {tabOpen === 'payment' && <PaymentsMethods />}
-      </Container>
+      </S.Container>
     </Layout>
   )
 }

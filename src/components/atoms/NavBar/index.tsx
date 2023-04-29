@@ -1,11 +1,17 @@
-import { FaHistory } from 'react-icons/fa'
+import { FaHistory, FaHashtag } from 'react-icons/fa'
 import { TbFileText } from 'react-icons/tb'
 import { IoImagesOutline } from 'react-icons/io5'
+import { useSession, signOut, signIn } from 'next-auth/react'
+import { GoSignIn } from 'react-icons/go'
 
 import { Link } from '../ActiveLink'
 import { Container } from './styles'
+import { Button } from '../Button'
 
 export function NavBar() {
+  const { data, status } = useSession()
+  const user = data?.user
+
   return (
     <Container>
       <header>
@@ -16,13 +22,19 @@ export function NavBar() {
         <li>
           <Link href="/copy">
             <TbFileText size={22} />
-            <span>Criador de copy</span>
+            <span>Gerador de copy</span>
           </Link>
         </li>
         <li>
           <Link href="/legend">
             <IoImagesOutline size={22} />
-            <span>Criador de legenda</span>
+            <span>Gerador de legenda</span>
+          </Link>
+        </li>
+        <li>
+          <Link href="/hashtag">
+            <FaHashtag size={22} />
+            <span>Gerador de Hashtag</span>
           </Link>
         </li>
         <li>
@@ -45,11 +57,21 @@ export function NavBar() {
         </li>
       </ul>
       <footer>
-        <b>Joao Pedro</b>
-        <span>jhon.peter@hotmail.com</span>
-        <button>
-          <img src="/assets/signOut.svg" alt="sair" />
-        </button>
+        {status === 'authenticated' && (
+          <>
+            <b>{user?.name}</b>
+            <span>{user?.email}</span>
+            <button onClick={() => signOut()} className="signOut--button">
+              <img src="/assets/signOut.svg" alt="sair" />
+            </button>
+          </>
+        )}
+        {status === 'unauthenticated' && (
+          <Button variant="solid" onClick={() => signIn('auth0')}>
+            <GoSignIn size={22} />
+            <span>Entrar</span>
+          </Button>
+        )}
       </footer>
     </Container>
   )

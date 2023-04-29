@@ -35,7 +35,7 @@ export const Container = styled.div`
       color: ${({ theme }) => theme.colors.blue[500]};
     }
 
-    button {
+    .signOut--button {
       background: transparent;
       border: 1px solid ${({ theme }) => theme.colors.gray[100]};
       padding: 12px;

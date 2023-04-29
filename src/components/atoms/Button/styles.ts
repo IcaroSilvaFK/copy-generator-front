@@ -10,6 +10,12 @@ export const Container = styled.button<ContainerProps>`
   font-weight: ${({ theme }) => theme.fontWeights.medium};
   border-radius: ${({ theme }) => theme.radii.base};
 
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: all linear 0.3s;
+
   ${({ theme, variant }) =>
     variant === 'solid' &&
     css`
